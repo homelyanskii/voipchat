@@ -56,8 +56,8 @@ public class ClientChat {
         panel.add(sendButton);
         setSocket();
 
-//        writer.println(login);
-//        writer.flush();
+        writer.println(login);
+        writer.flush();
 
         Thread thread = new Thread(new Listener());
         thread.start();

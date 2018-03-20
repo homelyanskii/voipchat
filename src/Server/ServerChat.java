@@ -35,10 +35,11 @@ public class ServerChat {
                 writer = new PrintWriter(socket.getOutputStream());
                 InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
                 BufferedReader reader = new BufferedReader(inputStreamReader);
-                //saveUser(reader.readLine());
+                String login = reader.readLine();
+                saveUser(login);
                 loadDB(writer);
                 arrayList.add(writer);
-                Thread thread = new Thread(new Listener(socket));
+                Thread thread = new Thread(new Listener(socket,login));
                 thread.start();
             }
         } catch (Exception e) {}
@@ -46,12 +47,15 @@ public class ServerChat {
 
     private static void saveUser(String login) throws SQLException {
 
-        String querySQL = "SELECT COUNT(`login`) FROM `logins` WHERE `login` = '"+ login +"'";
+        String querySQL = "SELECT COUNT(`login`) FROM `logins` WHERE `login` LIKE '" + login +"'";
         ResultSet resultSet = statement.executeQuery(querySQL);
+        resultSet.next();
+        System.out.println(resultSet.getString(1));
+
+
         Date date = new Date();
         DateFormat datePattern = new SimpleDateFormat("yyyy-MM-dd");
-        if (resultSet.wasNull() == true){
-//        System.out.println(datePattern.format(date));
+        if (resultSet.getInt(1) == 0){
             querySQL = "INSERT INTO `logins` (`login`,`last_entry`) VALUES ('"+ login +"','"+ datePattern.format(date) +"')";
         } else {
             querySQL = "UPDATE `logins` SET `last_entry`=\""+ datePattern.format(date) +"\" WHERE `login` LIKE \""+ login +"\" ";
@@ -64,13 +68,16 @@ public class ServerChat {
         int x = msg.indexOf(':');
         String login = msg.substring(0,x);
         msg = msg.substring(x + 1 , msg.length());
+
+        saveDB(login,msg);
+
         Iterator<PrintWriter> iterator = arrayList.iterator();
         while (iterator.hasNext()){
             writer = iterator.next();
             writer.println(login + ": " + msg);
             writer.flush();
         }
-        saveDB(login,msg);
+
     }
 
     private static void loadDB(PrintWriter writer) throws Exception {
@@ -85,10 +92,13 @@ public class ServerChat {
     }
 
     private static void saveDB(String login, String msg) throws SQLException, ClassNotFoundException {
-        String querySQL = "SELECT `#userID` FROM `logins` WHERE `login` LIKE \""+ login +"\"";
+
+        String querySQL = "SELECT `logins`.`#userID` FROM `logins` WHERE `logins`.`login` LIKE ";
+        querySQL = querySQL + "'"+ login +"'";
         ResultSet resultSet = statement.executeQuery(querySQL);
+        resultSet.next();
         Integer loginID = resultSet.getInt("#userID");
-        System.out.println(loginID);
+
         querySQL = "INSERT INTO `chat` (`loginID`, `msg`) VALUES ('"+ loginID +"', '"+ msg +"');";
         statement.executeUpdate(querySQL);
 //        querySQL = "INSERT INTO `logins` (`login`) VALUES ('"+ login +"');";
@@ -112,12 +122,14 @@ public class ServerChat {
     private static class Listener implements Runnable{
 
         BufferedReader bufferedReader;
+        String login;
 
-        Listener(Socket socket){
+        Listener(Socket socket, String login){
             InputStreamReader inputStreamReader;
             try {
                 inputStreamReader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(inputStreamReader);
+                this.login = login;
                 //System.out.println(bufferedReader.readLine());
             } catch (Exception e) {}
         }
