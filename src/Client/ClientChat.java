@@ -23,8 +23,8 @@ public class ClientChat {
     }
 
     public static void initChat(){
+        login = JOptionPane.showInputDialog("Введите логин");
 
-        login = JOptionPane.showInputDialog("Введите логин: ");
         JFrame mainFrame = new JFrame("Client");
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
@@ -44,7 +44,7 @@ public class ClientChat {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = login + ":" + mainTextField.getText();
+                String msg = mainTextField.getText();
                 writer.println(msg);
                 writer.flush();
                 mainTextField.setText("");

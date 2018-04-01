@@ -10,12 +10,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 public class ServerChat {
 
     private static ArrayList<PrintWriter> arrayList;
-    private static Connection c;
     private static Statement statement;
     private static PrintWriter writer;
 
@@ -42,7 +40,7 @@ public class ServerChat {
                 Thread thread = new Thread(new Listener(socket,login));
                 thread.start();
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 
     private static void saveUser(String login) throws SQLException {
@@ -64,20 +62,15 @@ public class ServerChat {
 
     }
 
-    private static void tellEveryone(String msg) throws SQLException, ClassNotFoundException {
-        int x = msg.indexOf(':');
-        String login = msg.substring(0,x);
-        msg = msg.substring(x + 1 , msg.length());
+    private static void tellEveryone(String login, String msg) throws SQLException, ClassNotFoundException {
 
         saveDB(login,msg);
 
-        Iterator<PrintWriter> iterator = arrayList.iterator();
-        while (iterator.hasNext()){
-            writer = iterator.next();
+        for (PrintWriter anArrayList : arrayList) {
+            writer = anArrayList;
             writer.println(login + ": " + msg);
             writer.flush();
         }
-
     }
 
     private static void loadDB(PrintWriter writer) throws Exception {
@@ -98,8 +91,11 @@ public class ServerChat {
         ResultSet resultSet = statement.executeQuery(querySQL);
         resultSet.next();
         Integer loginID = resultSet.getInt("#userID");
+        Date date = new Date();
+        DateFormat datePattern = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-        querySQL = "INSERT INTO `chat` (`loginID`, `msg`) VALUES ('"+ loginID +"', '"+ msg +"');";
+        querySQL = "INSERT INTO `chat` (`loginID`, `msg`, `msgDate`) VALUES ('"+ loginID +"', '"+ msg +"', '"
+                + datePattern.format(date) +"')";
         statement.executeUpdate(querySQL);
 //        querySQL = "INSERT INTO `logins` (`login`) VALUES ('"+ login +"');";
 //        statement.executeUpdate(querySQL);
@@ -114,7 +110,7 @@ public class ServerChat {
         String pass = "";
 
         Class.forName("com.mysql.jdbc.Driver");
-        c = DriverManager.getConnection(url, login, pass);
+        Connection c = DriverManager.getConnection(url, login, pass);
         statement = c.createStatement();
 
     }
@@ -131,7 +127,7 @@ public class ServerChat {
                 bufferedReader = new BufferedReader(inputStreamReader);
                 this.login = login;
                 //System.out.println(bufferedReader.readLine());
-            } catch (Exception e) {}
+            } catch (Exception e) { e.printStackTrace();}
         }
 
         @Override
@@ -142,11 +138,9 @@ public class ServerChat {
                 while ((msg = bufferedReader.readLine()) != null){
                     System.out.println(msg);
 
-                    tellEveryone(msg);
+                    tellEveryone(login,msg);
                 }
-            }catch (Exception e){}
+            }catch (Exception ignored){}
         }
-
-
     }
 }
