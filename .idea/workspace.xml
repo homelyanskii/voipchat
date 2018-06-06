@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9765efd9-cc1c-4ecd-bcbe-290e33ab8be5" name="Default" comment="db logging, new user creating,">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chat_beta/Client/ClientChat$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chat_beta/Client/ClientChat$Listener.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chat_beta/Client/ClientChat.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chat_beta/Server/ServerChat$Listener.class" afterPath="$PROJECT_DIR$/out/production/Chat_beta/Server/ServerChat$Listener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chat_beta/Server/ServerChat.class" afterPath="$PROJECT_DIR$/out/production/Chat_beta/Server/ServerChat.class" />
+    <list default="true" id="9765efd9-cc1c-4ecd-bcbe-290e33ab8be5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Client/ClientChat.java" afterPath="$PROJECT_DIR$/src/Client/ClientChat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Server/ServerChat.java" afterPath="$PROJECT_DIR$/src/Server/ServerChat.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -435,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1522601089150</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="db logging, new user creating,">
+      <created>1528297716056</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1528297716056</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
